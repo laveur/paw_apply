@@ -46,3 +46,10 @@ Please Don't Open Issues or Pull Requests unless you've contacted Laveur already
 * Source your environment variables: `source .env`
 * Run the dev server: `./manage.py runserver`
 * Run the tests: `./manage.py test`
+
+## Docker
+* Copy `.env.docker` to a local `.env.docker` and update the values.
+* Start the stack: `docker compose up --build`
+* App will be available at: `http://localhost:8000`
+* App runs with `gunicorn`
+* Nginx serves static files at `/static/`

@@ -1,0 +1,41 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        REQUIREMENTS: requirements_docker.txt
+    env_file:
+      - .env.docker
+    depends_on:
+      - db
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             gunicorn paw.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_DB: paw_apply
+      POSTGRES_USER: paw
+      POSTGRES_PASSWORD: paw
+      PGDATA: pgdata
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:alpine
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - static_volume:/static:ro
+
+volumes:
+  pgdata:
+  static_volume:

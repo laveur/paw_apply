@@ -124,8 +124,7 @@ DATABASES = {
         'NAME': 'paw_apply',
         'USER': os.getenv('DB_USER'),
         'PASSWORD': os.getenv('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '',
+        'HOST': os.getenv('DB_HOST', 'localhost'),
     }
 }
 
