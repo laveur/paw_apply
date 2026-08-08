@@ -44,6 +44,8 @@ class PerformerViewsTests(TestCase):
             "biography": "Bio text",
             "dj_history": "History text",
             "set_link": "https://example.com/set",
+            "captcha_0": "dummy-value",
+            "captcha_1": "PASSED",
         }
         data.update(overrides)
         return data
@@ -66,6 +68,7 @@ class PerformerViewsTests(TestCase):
         self.assertIsInstance(response.context["form"], PerformerForm)
 
     @override_settings(PERFORMERS_EMAIL="performers@example.com")
+    @patch("captcha.fields.settings.CAPTCHA_TEST_MODE", True)
     @patch("performers.views.send_paw_email_new")
     def test_new_view_creates_performer_and_redirects(self, send_paw_email_new):
         response = self.client.post(reverse("performers:new"), data=self._valid_post_data())
